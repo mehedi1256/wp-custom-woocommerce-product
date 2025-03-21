@@ -13,6 +13,14 @@
     exit;
  }
 
+ function wcp_show_woocommerce_error() {
+    echo "<div class='notice notice-error is-dismissible'><p><strong>Please Install and activate WooCommerce Plugin first.</strong></p></div>";
+ }
+
+ if(!in_array("woocommerce/woocommerce.php", apply_filters("active_plugins", get_option("active_plugins")))) {
+    add_action("admin_notices", "wcp_show_woocommerce_error");
+ }
+
 //  add plugin Menu
 add_action("admin_menu", "wce_add_menu");
 
@@ -22,5 +30,9 @@ function wce_add_menu() {
 
 // add WooCommerce Product Layout
 function wcp_add_woocommerce_product_layout() {
-    echo "<h3>add WooCommerce Product</h3>";
+    ob_start();
+    include_once plugin_dir_path(__FILE__) . "template/add_woocom_product_form.php";
+    $template = ob_get_contents();
+    ob_end_clean();
+    echo $template;
 }
